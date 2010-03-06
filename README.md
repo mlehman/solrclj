@@ -19,7 +19,7 @@ Use
 (query server "la mancha")
 
 ;; Delete
-(delete-by-query server "*:*)
+(delete-by-query server "*:*")
 
 ;; Commit 
 (commit server)

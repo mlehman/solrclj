@@ -1,4 +1,4 @@
-(defproject solrclj "1.0.0-SNAPSHOT"
+(defproject solrclj "0.1.0-SNAPSHOT"
   :description "A clojure library for using Apache Solr."
   :dependencies [[org.clojure/clojure "1.1.0"]
                  [org.clojure/clojure-contrib "1.1.0"]

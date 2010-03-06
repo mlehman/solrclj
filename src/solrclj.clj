@@ -1,4 +1,5 @@
 (ns solrclj
+  "A clojure library for Apache Solr."
   (:import (org.apache.solr.client.solrj SolrQuery))
   (:use [solrclj.servers] 
 	[solrclj.documents]	

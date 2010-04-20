@@ -25,6 +25,9 @@
 (defn commit [solr-server]
   (.commit solr-server))
 
+(defn optimize [solr-server]
+  (.optimize solr-server))
+
 (defn ping [solr-server]
   (.ping solr-server))
 

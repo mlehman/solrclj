@@ -1,13 +1,10 @@
 (ns solrclj.documents
   (:import (org.apache.solr.common SolrInputDocument)))
 
-(defn add-map-by-method [obj method map]
-  (reduce #(doto %1 (method (name (key %2)) (val %2))) obj map))
-
 (defn create-solr-document [document-map]
-  (add-map-by-method
+  (reduce 
+   #(doto %1 (.addField (name (key %2)) (val %2)))
    (SolrInputDocument.) 
-   #(.addField %1 %2 %3) 
    document-map))
 
 (defn add-document [solr-server solr-document]
@@ -21,7 +18,7 @@
 
 (defn create-map-from-solr-document [document]
   (apply merge 
-	 (map #(hash-map % (.getFieldValue document %)) (.getFieldNames document))))
+	 (map #(hash-map (keyword %) (.getFieldValue document %)) (.getFieldNames document))))
 
 (defn create-maps-from-solr-documents [documents]
   (map create-map-from-solr-document documents))

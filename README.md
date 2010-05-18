@@ -22,7 +22,7 @@ Use
 (query server "la mancha")
 
 ::Paging
-(query server "author:c*" :rows 100 : start 100)
+(query server "author:c*" :rows 100 :start 100)
 
 ;;Faceting
 (query server "*:*" :rows 0 :facet true :facet.field :author)

@@ -10,10 +10,10 @@ Use
 <pre>
 
 ;; Embedded Solr Example
-(def server (create-solr-server {:type :embedded :core "mycore" :dir "/home-path"})
+(def server (create-solr-server {:type :embedded :core "mycore" :dir "/home-path"}))
 
 ;; Http Solr Example
-(def server (create-solr-server {:type :http :host "localhost"})
+(def server (create-solr-server {:type :http :host "localhost"}))
 
 ;; Adding Documents
 (add server {:title "Don Quixote" :author "Miguel de Cervantes" :summary "..." })

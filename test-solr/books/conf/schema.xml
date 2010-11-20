@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<schema name="documents" version="1.2">
+<schema name="books" version="1.2">
 
   <types>
 
@@ -70,37 +70,26 @@
 
  <fields>
 
-   <!-- core index document fields -->
-   <field name="guid" type="string" indexed="true" stored="true" required="true" />
-   <field name="domain" type="string" indexed="true" stored="true" required="true" />
-   <field name="author" type="string" indexed="true" stored="true" required="true" />
-   <field name="venue_type_id" type="int" indexed="true" stored="true" required="true" />
-   <field name="lang_code" type="string" indexed="true" stored="true" required="true" />
-   <field name="source_id" type="int" indexed="true" stored="true" required="true" />
-   <field name="pub_date" type="date" indexed="true" stored="true" required="true" />
-   <field name="title" type="string" indexed="true" stored="true" required="true" />
-   <field name="url" type="string" indexed="true" stored="true" required="true" />
-   <field name="snippet" type="text" indexed="true" stored="true" required="true" />
+   <!-- book fields -->
+   <field name="rank" type="int" indexed="true" stored="true" required="true" />
+   <field name="title" type="text" indexed="true" stored="true" required="true" />
+   <field name="author" type="text" indexed="true" stored="true" required="true" />
+   <field name="language" type="string" indexed="true" stored="true" required="true" />
+   <field name="published" type="int" indexed="true" stored="true" required="true" />
 
-   <!-- unified platform fields -->
-   <field name="query_id" type="int" index="true" stored="true" required="false" multiValued="true" />
-   <field name="query_group_id" type="int" index="true" stored="true" required="false" multiValued="true" />
-   
    <field name="text" type="text" indexed="true" stored="false" multiValued="true"/>
-   <field name="text_rev" type="text_rev" indexed="true" stored="false" multiValued="true"/>
    <field name="timestamp" type="date" indexed="true" stored="true" default="NOW" multiValued="false"/>
 
  </fields>
 
 
- <uniqueKey>guid</uniqueKey>
+ <uniqueKey>rank</uniqueKey>
 
  <defaultSearchField>text</defaultSearchField>
 
  <solrQueryParser defaultOperator="OR"/>
 
  <copyField source="title" dest="text"/>
- <copyField source="snippet" dest="text"/>
  <copyField source="author" dest="text"/>
 
 </schema>

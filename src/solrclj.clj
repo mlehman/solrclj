@@ -1,14 +1,37 @@
 (ns solrclj
   "A clojure library for Apache Solr."
-  (:import (org.apache.solr.client.solrj SolrQuery))
-  (:use solrclj.servers 
+  (:import [org.apache.solr.client.solrj SolrServer SolrQuery])
+  (:use [solrclj.servers] 
 	solrclj.documents
 	solrclj.util))
 
-(defn add [solr-server map]
-  (add-document solr-server (create-solr-document map)))
+(defn ^SolrServer solr-server
+  "Constructs a SolrServer with a configuration map. 
+    :type - The implementation of SolrServer to create.
+
+   Additional parameters depending on type:
+    :http - CommonsHttpSolrServer
+     :host - The base URL of the Solr server. Defaults to 127.0.0.1.
+     :port - The port of the Solr server. Defaults to 8080.
+     :path - The path to the Solr to the index. Defaults to '/solr'.
+     :core - Optional if using multi-core solr.
+
+    :embedded - EmbeddedSolrServer
+     :solr-config - The solr configuration file. Defaults to 'solr.xml'.
+     :dir - The directory path. Defaults to './solr'
+     :core - Required if using multi-core solr."
+  [conf]
+  (create-solr-server conf))
+
+(defn add
+  "Adds maps as documents to the SolrServer."
+  [^SolrServer solr-server & document-maps]
+  (if (second document-maps)
+    (add-documents solr-server (create-solr-documents document-maps))
+    (add-document solr-server (create-solr-document document-maps))))
 
 (defn delete-by-id [solr-server id]
+  "Delete one or many documents by id."
   (.deleteById solr-server id))
 
 (defn delete-by-query [solr-server query]

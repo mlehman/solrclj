@@ -1,10 +1,12 @@
 (ns solrclj
   "A clojure library for Apache Solr."
   (:import [org.apache.solr.client.solrj SolrServer SolrQuery])
-  (:use [solrclj.servers] 
-	[solrclj.documents]
-	[solrclj.response :only [response-base]]
-	[solrclj.util]))
+  (:use [solrclj.servers :only [create-solr-server]] 
+	[solrclj.documents :only [add-document
+				  add-documents
+				  create-solr-document
+				  create-solr-documents]]
+	[solrclj.response :only [response-base]]))
 
 (defn ^SolrServer solr-server
   "Constructs a SolrServer with a configuration map. 
@@ -27,9 +29,10 @@
 (defn add
   "Adds maps as documents to the SolrServer."
   [^SolrServer solr-server & document-maps]
-  (if (second document-maps)
-    (add-documents solr-server (create-solr-documents document-maps))
-    (add-document solr-server (create-solr-document document-maps))))
+  (response-base
+   (if (second document-maps)
+     (add-documents solr-server (create-solr-documents document-maps))
+     (add-document solr-server (create-solr-document document-maps)))))
 
 (defn delete-by-id [solr-server id]
   "Delete one or many documents by id."
@@ -57,7 +60,7 @@
 	  (org.apache.solr.common.params.ModifiableSolrParams.)
 	  m))
 
-(defn create-query [query options] 
+(defn- create-query [query options] 
    (create-solr-params (assoc (merge options {})
 			 "q" query)))
 
@@ -74,8 +77,4 @@
 			 (create-query query (apply hash-map options)))
 	results (.getResults response)
 	facets (.getFacetFields response)]
-   {:num-found (.getNumFound results)
-    :start (.getStart results)
-    :max-score (.getMaxScore results)
-    :results (set (create-maps-from-solr-documents results))
-    :facets (create-facets-maps facets)}))
+   (response-base response)))

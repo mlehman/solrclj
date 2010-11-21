@@ -19,11 +19,30 @@
 
 (deftest test-add
   (testing "Add documents to Solr"
+    (let [s (solr-server test-embedded-books-conf)
+	  r (apply add s top-selling-books)]
+      (commit s)
+      (is (= 0 (get-in r [:responseHeader :status])))
+      (is (= 15 (get-in (query s "*:*") [:response :numFound])))
+      )))
+
+(deftest test-query
+  (testing "Query Solr"
     (let [s (solr-server test-embedded-books-conf)]
-      (testing (= "" (apply add s top-selling-books))))))
+      (delete-by-query s "*:*")
+      (apply add s top-selling-books)
+      (is (= 15 (get-in (query s "*:*") [:response :numFound])))
+      (is (= 3 (get-in (query s "title:s*") [:response :numFound])))
+      (is (= 1 (get-in (query s "rank:1") [:response :numFound]))))))
+
+(deftest test-delete
+  (testing "Delete documents in Solr"
+    (let [s (solr-server test-embedded-books-conf)]
+      (testing nil))))
 
 (defn test-ns-hook []
   (test-solr-server)
   (with-jetty-solr
     (test-ping)
-    (test-add)))
+    (test-add)
+    (test-query)))

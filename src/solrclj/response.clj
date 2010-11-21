@@ -1,6 +1,8 @@
 (ns solrclj.response
+  (:use [solrclj.documents :only [create-maps-from-solr-documents]])
   (:import [org.apache.solr.client.solrj.response SolrResponseBase]
-	   [org.apache.solr.common.util NamedList]))
+	   [org.apache.solr.common.util NamedList]
+	   [org.apache.solr.common SolrDocumentList]))
 
 (declare convert-named-list)
 
@@ -10,14 +12,26 @@
     (keyword k)
     k))
 
+(defn convert-solr-document-list
+  [l]
+  {:maxScore (.getMaxScore l)
+   :numFound (.getNumFound l)
+   :start (.getStart l)
+   :docs (create-maps-from-solr-documents (iterator-seq (.iterator l)))})
+
+(defn convert-value
+  [v]
+  (cond
+     (instance? NamedList v) (convert-named-list v)
+     (instance? SolrDocumentList v) (convert-solr-document-list v)
+     :else v))
+
 (defn convert-map-entry
   "Converts a MapEntry from a NamedList into a map. Nested NamedLists are recursively converted. "
   [map-entry]
   (let [k (convert-key (.getKey map-entry))
 	v (.getValue map-entry)]
-    (if (instance? NamedList v)
-      {k (convert-named-list v)}
-      {k v})))
+    {k (convert-value v)}))
 
 (defn convert-named-list
    "Converts a NamedList into a map. Nested NamedLists are recursively converted. "

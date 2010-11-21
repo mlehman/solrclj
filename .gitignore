@@ -2,4 +2,5 @@ pom.xml
 *jar
 lib
 classes
-test-solr/books/data
+test-solr/*/data
+*~

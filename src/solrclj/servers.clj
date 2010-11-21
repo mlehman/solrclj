@@ -26,8 +26,8 @@
       :port 8080
       :path "/solr"})
 
-(defn create-server-url [{:keys [host port path]}]
-  (str "http://" host ":" port path))
+(defn create-server-url [{:keys [host port path core]}]
+  (str "http://" host ":" port path (if core (str "/" core))))
 
 (defmethod create-solr-server :http [config]
   (let [config  (merge default-http-config config)]

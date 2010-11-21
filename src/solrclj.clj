@@ -49,12 +49,11 @@
 (defn format-param [v]
   (if (keyword? v) (name v) (str v)))
 
-(defn- create-solr-params [m]
-  (org.apache.solr.common.params.MapSolrParams. 
-   (reduce  #(doto %1 
-	       (.put (format-param (key %2)) 
-		     (format-param (val %2)))) 
-	    (java.util.HashMap.) m)))
+(defn create-solr-params [m]
+  (reduce #(let [k (key %2) v (val %2) vv (if (vector? v) v [v])]
+    (doto %1 (.set k (into-array (map format-param vv)))))
+  (org.apache.solr.common.params.ModifiableSolrParams.)
+  m))
 
 (defn create-query [query options] 
    (create-solr-params (assoc (merge options {})

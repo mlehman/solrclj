@@ -9,8 +9,9 @@
 	   [java.io File]))
 
 (def test-solr-root "test-solr")
-(def test-embedded-book-conf {:dir test-solr-root :core "books"})
+(def test-embedded-books-conf {:dir test-solr-root :core "books"})
 (def test-http-conf {:type :http :port 2345})
+(def test-http-books-conf (assoc test-http-conf :core "books"))
 
 (defn map-path
   "Helper to map relative paths to absolute paths."
@@ -49,11 +50,13 @@
   (.stop jetty-server))
 
 (defmacro with-jetty-solr
-  [body]
+  [& body]
   `(let [j# (start-jetty)]
-     (~@body)
-     (stop-jetty j#)
-     (.join j#)))
+     (try
+       ~@body
+       (finally
+	(stop-jetty j#)
+	(.join j#)))))
 
 (defn delete-test-core
   [core]

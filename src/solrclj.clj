@@ -2,8 +2,9 @@
   "A clojure library for Apache Solr."
   (:import [org.apache.solr.client.solrj SolrServer SolrQuery])
   (:use [solrclj.servers] 
-	solrclj.documents
-	solrclj.util))
+	[solrclj.documents]
+	[solrclj.response :only [response-base]]
+	[solrclj.util]))
 
 (defn ^SolrServer solr-server
   "Constructs a SolrServer with a configuration map. 
@@ -44,7 +45,8 @@
   (.optimize solr-server))
 
 (defn ping [solr-server]
-  (.ping solr-server))
+  "Issues a ping request to the server for monitoring."
+  (response-base (.ping solr-server)))
 
 (defn format-param [v]
   (if (keyword? v) (name v) (str v)))
@@ -52,8 +54,8 @@
 (defn create-solr-params [m]
   (reduce #(let [k (key %2) v (val %2) vv (if (vector? v) v [v])]
     (doto %1 (.set k (into-array (map format-param vv)))))
-  (org.apache.solr.common.params.ModifiableSolrParams.)
-  m))
+	  (org.apache.solr.common.params.ModifiableSolrParams.)
+	  m))
 
 (defn create-query [query options] 
    (create-solr-params (assoc (merge options {})

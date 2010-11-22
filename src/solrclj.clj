@@ -74,7 +74,5 @@
 
 (defn query [solr-server query & options]
   (let [response (.query solr-server
-			 (create-query query (apply hash-map options)))
-	results (.getResults response)
-	facets (.getFacetFields response)]
+			 (create-query query (apply hash-map options)))]
    (response-base response)))

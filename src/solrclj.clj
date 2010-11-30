@@ -30,9 +30,9 @@
   "Adds maps as documents to the SolrServer."
   [^SolrServer solr-server & document-maps]
   (response-base
-   (if (second document-maps)
-     (add-documents solr-server (create-solr-documents document-maps))
-     (add-document solr-server (create-solr-document document-maps)))))
+   (if (map? document-maps)
+     (add-document solr-server (create-solr-document document-maps))
+     (add-documents solr-server (create-solr-documents document-maps)))))
 
 (defn delete-by-id [solr-server id]
   "Delete one or many documents by id."

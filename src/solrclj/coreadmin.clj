@@ -22,3 +22,10 @@ to accept requests. Once it has finished, all new request will go to the 'new' c
   (let [core-response (CoreAdminRequest/createCore name instanceDir s configFile schemaFile)
 	response (response-base core-response)]
     response))
+
+(defn reload
+  "Load a new core from the same configuration as an existing registered core. While the \"new\" core is initalizing, the \"old\" one will continue to accept requests. Once it has finished, all new request will go to the \"new\" core, and the \"old\" core will be unloaded."
+  [^SolrServer s ^String core]
+  (let [core-response (CoreAdminRequest/reloadCore core s)
+	response (response-base core-response)]
+    response))

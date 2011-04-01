@@ -23,7 +23,18 @@
 	(is (= "magazines" (:core r))))))
   (delete-test-core "magazines"))
 
+(deftest test-reload
+  (let [solr-server (solr-server test-http-conf)]
+    (testing "Reload a core."
+      (let [r  (create solr-server "newspapers" "newspapers"
+		       (map-path "test-solr/conf/solrconfig.xml")
+		       (map-path "test-solr/conf/schema.xml"))
+	    r (reload solr-server "newspapers")]
+	(is (= 0 (get-in r [:responseHeader :status]))))))
+  (delete-test-core "newspapers"))
+
 (defn test-ns-hook []
   (with-jetty-solr
     (test-status)
-    (test-create)))
+    (test-create)
+    (test-reload)))

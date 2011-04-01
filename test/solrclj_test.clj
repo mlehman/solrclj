@@ -26,15 +26,28 @@
       (is (= 15 (get-in (query s "*:*") [:response :numFound])))
       )))
 
+(defn reload-books
+  [s]
+  (delete-by-query s "*:*")
+      (commit s)
+      (apply add s top-selling-books)
+      (commit s))
+
 (deftest test-query
   (testing "Query Solr"
     (let [s (solr-server test-embedded-books-conf)]
-      (delete-by-query s "*:*")
-      (apply add s top-selling-books)
+      (reload-books s)
       (is (= 15 (get-in (query s "*:*") [:response :numFound])))
       (is (= 3 (get-in (query s "title:s*") [:response :numFound])))
-      (is (= 1 (get-in (query s "rank:1") [:response :numFound]))))))
-
+      (is (= 3 (get-in (query s "title:s*" :rows 1) [:response :numFound])))
+      (is (= 1 (get-in (query s "rank:1") [:response :numFound])))
+      (is (= 15 (get-in (query s "*:*") [:response :numFound])))
+      (is (= 10 (get-in (query s "*:*" :fq "language:en") [:response :numFound])))
+      (is (= 2 (get-in (query s "*:*" :fq "published:[2000 TO *]") [:response :numFound])))
+      (is (= 7 (get-in (query s "*:*" :fq ["language:en"
+					   "published:[1900 TO *]"]) [:response :numFound])))
+      (is (= 1 (get-in (query s "*:*" :fq ["language:zh"
+					    "published:[1900 TO *]"]) [:response :numFound]))))))
 (deftest test-delete
   (testing "Delete documents in Solr"
     (let [s (solr-server test-embedded-books-conf)]

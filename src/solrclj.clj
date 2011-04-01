@@ -6,7 +6,8 @@
 				  add-documents
 				  create-solr-document
 				  create-solr-documents]]
-	[solrclj.response :only [response-base]]))
+	[solrclj.response :only [response-base]])
+  (:import [org.apache.solr.common.params MultiMapSolrParams]))
 
 (defn ^SolrServer solr-server
   "Constructs a SolrServer with a configuration map. 
@@ -44,6 +45,9 @@
 (defn commit [solr-server]
   (.commit solr-server))
 
+(defn rollback [solr-server]
+  (.rollback solr-server))
+
 (defn optimize [solr-server]
   (.optimize solr-server))
 
@@ -51,14 +55,21 @@
   "Issues a ping request to the server for monitoring."
   (response-base (.ping solr-server)))
 
-(defn format-param [v]
-  (if (keyword? v) (name v) (str v)))
+(defn format-param [p]
+  (if (keyword? p)
+    (name p)
+    (str p)))
 
-(defn create-solr-params [m]
-  (reduce #(let [k (key %2) v (val %2) vv (if (vector? v) v [v])]
-    (doto %1 (.set k (into-array (map format-param vv)))))
-	  (org.apache.solr.common.params.ModifiableSolrParams.)
-	  m))
+(defn format-values [v]
+  (let [v (if (vector? v) v [v])]
+    (into-array (map format-param v))))
+
+(defn- create-solr-params [m]	 	
+  (MultiMapSolrParams. 	 	
+   (reduce  #(doto %1 	 	
+	       (.put (format-param (key %2)) 	 	
+		     (format-values (val %2)))) 
+	    (java.util.HashMap.) m)))
 
 (defn- create-query [query options] 
    (create-solr-params (assoc (merge options {})

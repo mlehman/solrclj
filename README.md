@@ -19,7 +19,7 @@ Examples
 
 ### Querying 
 
-The first argument is the mandator solr query parameter (q). Any additional solr parameters can be added using additional keyword arguments. Use a vector as the value to send multiple params. The query can use the [Solr Query Syntax](http://wiki.apache.org/solr/SolrQuerySyntax).
+The first argument is the mandatory solr query parameter (q). Any additional solr parameters can be added using additional keyword arguments. Use a vector as the value to send multiple params. The query can use the [Solr Query Syntax](http://wiki.apache.org/solr/SolrQuerySyntax).
 
     ;; Simple Query 
     (query server "la mancha")
@@ -78,7 +78,7 @@ Modify your [Leiningen](http://github.com/technomancy/leiningen) dependencies to
 References
 ----------
 
-- [Apache Solr](http://lucene.apache.org/solr/
+- [Apache Solr](http://lucene.apache.org/solr/)
 - [Solr Common Parameters](http://wiki.apache.org/solr/CommonQueryParameters)
 - [Solr Query Parameters](http://wiki.apache.org/solr/SearchHandler)
 - [Solr Query Syntax](http://wiki.apache.org/solr/SolrQuerySyntax)

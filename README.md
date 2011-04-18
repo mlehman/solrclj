@@ -12,7 +12,7 @@ Examples
     (def server (create-solr-server {:type :http 
                                      :host "localhost"}))
 
-    ;; Http Mulit-core Solr Example
+    ;; Http Multi-core Solr Example
     (def server (create-solr-server {:type :http 
                                      :core "books"
                                      :host "localhost"}))

@@ -6,7 +6,7 @@
 		 [org.slf4j/slf4j-nop "1.5.5"]]
   :dev-dependencies [[org.apache.solr/solr-core "1.4.0"]
 		     [javax.servlet/servlet-api "2.5"]		    
-		     [leiningen/lein-swank "1.1.0"]
+		     [swank-clojure "1.3.0"]
 		     [lein-clojars "0.5.0"]
 		     [org.mortbay.jetty/jetty "6.1.15"]
 		     [org.mortbay.jetty/jsp-2.1-jetty "6.1.15"]

@@ -17,8 +17,8 @@
   (.add solr-server solr-documents))
 
 (defn create-map-from-solr-document [document]
-  (apply merge 
-	 (map #(hash-map (keyword %) (.getFieldValue document %)) (.getFieldNames document))))
+  (into {} (for [fld (.getFieldNames document)]
+	     {(keyword fld) (.getFieldValue document fld)})))
 
 (defn create-maps-from-solr-documents [documents]
   (map create-map-from-solr-document documents))

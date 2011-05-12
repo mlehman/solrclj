@@ -38,8 +38,7 @@
 (defn convert-named-list
    "Converts a NamedList into a map. Nested NamedLists are recursively converted. "
   [named-list]
-  (reduce merge
-	  (map convert-map-entry (iterator-seq (.iterator named-list)))))
+  (into {} (map convert-map-entry (iterator-seq (.iterator named-list)))))
 
 (defn response-base
   "Convert a ResponseBase into a map."

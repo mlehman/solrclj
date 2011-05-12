@@ -1,8 +1,9 @@
 (ns solrclj.response
   (:use [solrclj.documents :only [create-maps-from-solr-documents]])
   (:import [org.apache.solr.client.solrj.response SolrResponseBase]
-	   [org.apache.solr.common.util NamedList]
-	   [org.apache.solr.common SolrDocumentList]))
+	   [org.apache.solr.common.util NamedList SimpleOrderedMap]
+	   [org.apache.solr.common SolrDocumentList]
+	   [java.util ArrayList]))
 
 (declare convert-named-list)
 
@@ -22,9 +23,10 @@
 (defn convert-value
   [v]
   (cond
-     (instance? NamedList v) (convert-named-list v)
-     (instance? SolrDocumentList v) (convert-solr-document-list v)
-     :else v))
+   (instance? SolrDocumentList v) (convert-solr-document-list v)
+   (instance? NamedList v) (convert-named-list v)
+   (instance? ArrayList v) (vec (map convert-value v))
+   :else v))
 
 (defn convert-map-entry
   "Converts a MapEntry from a NamedList into a map. Nested NamedLists are recursively converted. "

@@ -41,6 +41,6 @@
   (into {} (map convert-map-entry (iterator-seq (.iterator named-list)))))
 
 (defn response-base
-  "Convert a ResponseBase into a map."
+  "Convert a ResponseBase into a map. Stores the ResponseBase as :response in the map's metadata."
   [^SolrResponseBase r]
-  (convert-named-list (.getResponse r)))
+  (with-meta (convert-named-list (.getResponse r)) {:response r}))

@@ -4,7 +4,8 @@
   (:use [solrclj] :reload-all)
   (:use [clojure.test])
   (:import [org.apache.solr.client.solrj.embedded EmbeddedSolrServer]
-	   [org.apache.solr.client.solrj.impl CommonsHttpSolrServer]))
+	   [org.apache.solr.client.solrj.impl CommonsHttpSolrServer]
+	   [org.apache.solr.client.solrj.response QueryResponse]))
 
 (deftest test-solr-server
   (testing "Construct an EmbeddedServer"
@@ -48,6 +49,14 @@
 					   "published:[1900 TO *]"]) [:response :numFound])))
       (is (= 1 (get-in (query s "*:*" :fq ["language:zh"
 					    "published:[1900 TO *]"]) [:response :numFound]))))))
+
+(deftest test-response-contains-metadata
+  (testing "Facet Order"
+    (let [s (solr-server test-embedded-books-conf)
+          _ (reload-books s)
+          response (query s "*:*" :rows 0 :facet.sort true :facet true :facet.field "language")]
+      (is (= (class (-> response meta :response)) QueryResponse)))))
+
 (deftest test-delete
   (testing "Delete documents in Solr"
     (let [s (solr-server test-embedded-books-conf)]
@@ -58,4 +67,5 @@
   (with-jetty-solr
     (test-ping)
     (test-add)
-    (test-query)))
+    (test-query)
+    (test-response-contains-metadata)))

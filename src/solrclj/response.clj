@@ -29,16 +29,35 @@
    :else v))
 
 (defn convert-map-entry
-  "Converts a MapEntry from a NamedList into a map. Nested NamedLists are recursively converted. "
+  "Converts a MapEntry from a NamedList into a vector with 2 values. Nested NamedLists are recursively converted. "
   [map-entry]
   (let [k (convert-key (.getKey map-entry))
 	v (.getValue map-entry)]
-    {k (convert-value v)}))
+    [k (convert-value v)]))
+
+(defn- dup-key-in-paired-seq?
+  "returns true if k is found more than once as the first value in each value of coll.
+  The following example would yield true:
+    (dup-key-in-paired-seq? :test [[:test :this] [:test :that]])
+  The following example would yield false:
+    (dup-key-in-paired-seq? :test [[:test :this] [:that :test]])"
+  [k coll]
+  (> (count (filter #(= (first %) k) coll)) 1))
+
+(defn- uniquify-paired-seq
+  "removes values when dup-key-in-paired-seq? returns true"
+  [coll]
+  (remove #(dup-key-in-paired-seq? (first %1) coll) coll))
 
 (defn convert-named-list
-   "Converts a NamedList into a map. Nested NamedLists are recursively converted. "
+   "Converts a NamedList into a array-map. Nested NamedLists are recursively converted. "
   [named-list]
-  (into {} (map convert-map-entry (iterator-seq (.iterator named-list)))))
+  (let [itrseq (iterator-seq (.iterator named-list))
+        converted (map convert-map-entry itrseq)
+        reduced   (uniquify-paired-seq converted)
+        flattened (apply concat reduced)
+        result    (apply array-map flattened)]
+    result))
 
 (defn response-base
   "Convert a ResponseBase into a map. Stores the ResponseBase as :response in the map's metadata."

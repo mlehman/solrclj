@@ -75,14 +75,6 @@
    (create-solr-params (assoc (merge options {})
 			 "q" query)))
 
-(defn- create-facet-map [facet]
-  (hash-map :name (.getName facet) 
-	    :values (reduce #(assoc %1 (.getName %2) (.getCount %2) ) 
-			    {} (.getValues facet))))
-
-(defn- create-facets-maps [facets]
-  (map create-facet-map facets))
-
 (defn query [solr-server query & options]
   (let [response (.query solr-server
 			 (create-query query (apply hash-map options)))]

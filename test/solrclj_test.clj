@@ -51,11 +51,33 @@
 					    "published:[1900 TO *]"]) [:response :numFound]))))))
 
 (deftest test-response-contains-metadata
-  (testing "Facet Order"
+  (testing "Response metadata"
     (let [s (solr-server test-embedded-books-conf)
           _ (reload-books s)
-          response (query s "*:*" :rows 0 :facet.sort true :facet true :facet.field "language")]
+          response (query s "*:*")]
       (is (= (class (-> response meta :response)) QueryResponse)))))
+
+(deftest test-facet-order-by-count
+  (testing "Facet order by count"
+    (let [s (solr-server test-embedded-books-conf)
+          _ (reload-books s)
+          response (query s "*:*" :facet.sort "count" :facet true :facet.field ["language" "codes"])
+          ff (-> response :facet_counts :facet_fields)
+          code-counts (-> ff :codes vals)
+          lang-counts (-> ff :language vals)]
+      (is (= code-counts) [7, 6, 5, 5, 4, 3, 2, 2, 1, 1, 1, 1, 1])
+      (is (= lang-counts [10, 2, 1, 1, 1])))))
+
+(deftest test-facet-order-by-index
+  (testing "Facet order by index"
+    (let [s (solr-server test-embedded-books-conf)
+          _ (reload-books s)
+          response (query s "*:*" :facet.sort "index" :facet true :facet.field ["language" "codes"])
+          ff (-> response :facet_counts :facet_fields)
+          code-keys (-> ff :codes keys)
+          lang-keys (-> ff :language keys)]
+      (is (= code-keys) '(:A :B :C :D :F :G :I :L :P :Q :X :Y :Z))
+      (is (= lang-keys '(:de :en :fr :pt :zh))))))
 
 (deftest test-delete
   (testing "Delete documents in Solr"
@@ -68,4 +90,6 @@
     (test-ping)
     (test-add)
     (test-query)
+    (test-facet-order-by-count)
+    (test-facet-order-by-index)
     (test-response-contains-metadata)))

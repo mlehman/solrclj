@@ -32,22 +32,13 @@
   "Converts a MapEntry from a NamedList into a vector with 2 values. Nested NamedLists are recursively converted. "
   [map-entry]
   (let [k (convert-key (.getKey map-entry))
-	v (.getValue map-entry)]
-    [k (convert-value v)]))
-
-(defn- dup-key-in-paired-seq?
-  "returns true if k is found more than once as the first value in each value of coll.
-  The following example would yield true:
-    (dup-key-in-paired-seq? :test [[:test :this] [:test :that]])
-  The following example would yield false:
-    (dup-key-in-paired-seq? :test [[:test :this] [:that :test]])"
-  [k coll]
-  (> (count (filter #(= (first %) k) coll)) 1))
+	    v (convert-value (.getValue map-entry))]
+    [k v]))
 
 (defn- uniquify-paired-seq
   "removes values when dup-key-in-paired-seq? returns true"
   [coll]
-  (remove #(dup-key-in-paired-seq? (first %1) coll) coll))
+  (map #(first (val %1)) (group-by first coll)))
 
 (defn convert-named-list
    "Converts a NamedList into a array-map. Nested NamedLists are recursively converted. "

@@ -1,5 +1,5 @@
 (ns solrclj.test-helpers
-  (:use [clojure.contrib.java-utils])
+  (:use [clojure.contrib.java-utils :only [delete-file-recursively]])
   (:import [org.mortbay.jetty.webapp WebAppContext]
 	   [org.mortbay.jetty Connector Server Request Response Handler]
 	   [org.mortbay.jetty.nio SelectChannelConnector]

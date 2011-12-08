@@ -2,11 +2,11 @@
   "A clojure library for Apache Solr."
   (:import [org.apache.solr.client.solrj SolrServer SolrQuery])
   (:use [solrclj.servers :only [create-solr-server]] 
-	[solrclj.documents :only [add-document
-				  add-documents
-				  create-solr-document
-				  create-solr-documents]]
-	[solrclj.response :only [response-base]])
+    [solrclj.documents :only [add-document
+                              add-documents
+                              create-solr-document
+                              create-solr-documents]]
+    [solrclj.response :only [response-base]])
   (:import [org.apache.solr.common.params MultiMapSolrParams]))
 
 (defn ^SolrServer solr-server
@@ -64,18 +64,19 @@
   (let [v (if (vector? v) v [v])]
     (into-array (map format-param v))))
 
-(defn- create-solr-params [m]	 	
-  (MultiMapSolrParams. 	 	
-   (reduce  #(doto %1 	 	
-	       (.put (format-param (key %2)) 	 	
-		     (format-values (val %2)))) 
-	    (java.util.HashMap.) m)))
+(defn- create-solr-params [m]
+  (MultiMapSolrParams.
+   (reduce  #(doto %1
+           (.put (format-param (key %2))
+             (format-values (val %2))))
+        (java.util.HashMap.) m)))
 
 (defn- create-query [query options] 
    (create-solr-params (assoc (merge options {})
-			 "q" query)))
+             "q" query)))
 
 (defn query [solr-server query & options]
   (let [response (.query solr-server
-			 (create-query query (apply hash-map options)))]
+             (create-query query (apply hash-map options)))]
    (response-base response)))
+

@@ -2,11 +2,11 @@
   "A clojure library for Apache Solr."
   (:import [org.apache.solr.client.solrj SolrServer SolrQuery])
   (:use [solrclj.servers :only [create-solr-server]] 
-    [solrclj.documents :only [add-document
-                              add-documents
-                              create-solr-document
-                              create-solr-documents]]
-    [solrclj.response :only [response-base]])
+        [solrclj.documents :only [add-document
+                                  add-documents
+                                  create-solr-document
+                                  create-solr-documents]]
+        [solrclj.response :only [response-base]])
   (:import [org.apache.solr.common.params MultiMapSolrParams]))
 
 (defn ^SolrServer solr-server
@@ -31,9 +31,9 @@
   "Adds maps as documents to the SolrServer."
   [^SolrServer solr-server & document-maps]
   (response-base
-   (if (map? document-maps)
-     (add-document solr-server (create-solr-document document-maps))
-     (add-documents solr-server (create-solr-documents document-maps)))))
+    (if (map? document-maps)
+      (add-document solr-server (create-solr-document document-maps))
+      (add-documents solr-server (create-solr-documents document-maps)))))
 
 (defn delete-by-id [solr-server id]
   "Delete one or many documents by id."
@@ -66,17 +66,16 @@
 
 (defn- create-solr-params [m]
   (MultiMapSolrParams.
-   (reduce  #(doto %1
-           (.put (format-param (key %2))
-             (format-values (val %2))))
-        (java.util.HashMap.) m)))
+    (reduce #(doto %1
+               (.put (format-param (key %2))
+                     (format-values (val %2))))
+            (java.util.HashMap.) m))) ; this should probably be done with walk
 
-(defn- create-query [query options] 
-   (create-solr-params (assoc (merge options {})
-             "q" query)))
+(defn- create-query [query options]
+  (create-solr-params (assoc (merge options {}) "q" query)))
 
 (defn query [solr-server query & options]
   (let [response (.query solr-server
-             (create-query query (apply hash-map options)))]
+                         (create-query query (apply hash-map options)))]
    (response-base response)))
 

@@ -1,9 +1,9 @@
 (ns solrclj.response
   (:use [solrclj.documents :only [create-maps-from-solr-documents]])
   (:import [org.apache.solr.client.solrj.response SolrResponseBase]
-	   [org.apache.solr.common.util NamedList SimpleOrderedMap]
-	   [org.apache.solr.common SolrDocumentList]
-	   [java.util ArrayList]))
+       [org.apache.solr.common.util NamedList SimpleOrderedMap]
+       [org.apache.solr.common SolrDocumentList]
+       [java.util ArrayList]))
 
 (declare convert-named-list)
 
@@ -32,7 +32,7 @@
   "Converts a MapEntry from a NamedList into a vector with 2 values. Nested NamedLists are recursively converted. "
   [map-entry]
   (let [k (convert-key (.getKey map-entry))
-	    v (convert-value (.getValue map-entry))]
+        v (convert-value (.getValue map-entry))]
     [k v]))
 
 (defn- uniquify-paired-seq

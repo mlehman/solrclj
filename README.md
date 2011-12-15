@@ -95,7 +95,7 @@ Getting
 
 Modify your [Leiningen](http://github.com/technomancy/leiningen) dependencies to include Solrclj:
 
-    :dependencies [[solrclj/solrclj "0.1.1"] ...] 
+    :dependencies [[solrclj/solrclj "0.1.2"] ...] 
 
 
 References

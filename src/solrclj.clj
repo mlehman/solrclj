@@ -1,7 +1,7 @@
 (ns solrclj
   "A clojure library for Apache Solr."
   (:import [org.apache.solr.client.solrj SolrServer SolrQuery])
-  (:use [solrclj.servers :only [create-solr-server]] 
+  (:use [solrclj.servers :only [create-solr-server]]
         [solrclj.documents :only [add-document
                                   add-documents
                                   create-solr-document
@@ -10,7 +10,7 @@
   (:import [org.apache.solr.common.params MultiMapSolrParams]))
 
 (defn ^SolrServer solr-server
-  "Constructs a SolrServer with a configuration map. 
+  "Constructs a SolrServer with a configuration map.
     :type - The implementation of SolrServer to create.
 
    Additional parameters depending on type:

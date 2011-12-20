@@ -6,7 +6,7 @@
 
 (defmulti create-solr-server :type)
 
-(def default-embedded-config 
+(def default-embedded-config
      {:type :embedded
       :solr-config "solr.xml"
       :dir "./solr"})
@@ -36,7 +36,7 @@
 	container (core-container dir solr-config-file)]
     (embedded-solr-server container core)))
 
-(def default-http-config 
+(def default-http-config
      {:type :http
       :host "127.0.0.1"
       :port 8080

@@ -45,7 +45,7 @@
     (.addConnector (create-connector 2345))
     (.setHandler (create-solr-web-app "test-jetty"))
     (.start)))
-       
+
 (defn stop-jetty [#^Server jetty-server]
   (.stop jetty-server))
 

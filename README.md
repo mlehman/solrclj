@@ -9,21 +9,20 @@ Examples
 ### Creating the client
 
     (use 'solrclj)
-    (use 'solrclj.servers)
 
     ;; Http Solr Example
-    (def server (create-solr-server {:type :http 
-                                     :host "localhost"}))
+    (def server (solr-server {:type :http 
+                              :host "localhost"}))
 
     ;; Http Multi-core Solr Example
-    (def server (create-solr-server {:type :http 
-                                     :core "books"
-                                     :host "localhost"}))
+    (def server (solr-server {:type :http 
+                              :core "books"
+                              :host "localhost"}))
 
     ;; Embedded Solr Example
-    (def server (create-solr-server {:type :embedded 
-                                     :core "mycore"
-                                     :dir "/home-path"}))
+    (def server (solr-server {:type :embedded 
+                             :core "mycore"
+                             :dir "/home-path"}))
 
 ### Querying 
 

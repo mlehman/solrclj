@@ -1,27 +1,31 @@
 (ns solrclj-test
   (:use [solrclj.data]
-	[solrclj.test-helpers])
+        [solrclj.test-helpers])
   (:use [solrclj] :reload-all)
   (:use [clojure.test])
   (:import [org.apache.solr.client.solrj.embedded EmbeddedSolrServer]
-	   [org.apache.solr.client.solrj.impl CommonsHttpSolrServer]
-	   [org.apache.solr.client.solrj.response QueryResponse]))
+           [org.apache.solr.client.solrj.impl CommonsHttpSolrServer]
+           [org.apache.solr.client.solrj.response QueryResponse]))
 
 (deftest test-solr-server
   (testing "Construct an EmbeddedServer"
     (is (instance? EmbeddedSolrServer (solr-server test-embedded-books-conf))))
   (testing "Construct a CommonsHttpSolrServer."
-    (is (instance? CommonsHttpSolrServer (solr-server test-http-conf)))))
+    (is (instance? CommonsHttpSolrServer (solr-server test-http-conf))))
+  (testing "Construct a set of EmbeddedServer instances using a single core-container"
+    (let [cores (solr-server {:type :embedded-multi :dir "test-solr"})]
+      (is (map? cores))
+      (every? #(is (instance? EmbeddedSolrServer %)) (vals cores)))))
 
 (deftest test-ping
   (let [s (solr-server test-http-books-conf)
-	r (ping s)]
+        r (ping s)]
     (is (= "OK" (:status r)))))
 
 (deftest test-add
   (testing "Add documents to Solr"
     (let [s (solr-server test-embedded-books-conf)
-	  r (apply add s top-selling-books)]
+          r (apply add s top-selling-books)]
       (commit s)
       (is (= 0 (get-in r [:responseHeader :status])))
       (is (= 15 (get-in (query s "*:*") [:response :numFound])))
@@ -46,9 +50,9 @@
       (is (= 10 (get-in (query s "*:*" :fq "language:en") [:response :numFound])))
       (is (= 2 (get-in (query s "*:*" :fq "published:[2000 TO *]") [:response :numFound])))
       (is (= 7 (get-in (query s "*:*" :fq ["language:en"
-					   "published:[1900 TO *]"]) [:response :numFound])))
+                                           "published:[1900 TO *]"]) [:response :numFound])))
       (is (= 1 (get-in (query s "*:*" :fq ["language:zh"
-					    "published:[1900 TO *]"]) [:response :numFound]))))))
+                                            "published:[1900 TO *]"]) [:response :numFound]))))))
 
 (deftest test-response-contains-metadata
   (testing "Response metadata"

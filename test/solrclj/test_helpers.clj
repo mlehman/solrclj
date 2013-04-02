@@ -1,5 +1,4 @@
 (ns solrclj.test-helpers
-  (:use [clojure.contrib.java-utils :only [delete-file-recursively]])
   (:import [org.mortbay.jetty.webapp WebAppContext]
 	   [org.mortbay.jetty Connector Server Request Response Handler]
 	   [org.mortbay.jetty.nio SelectChannelConnector]
@@ -58,6 +57,11 @@
 	(stop-jetty j#)
 	(.join j#)))))
 
+(defn- delete-file-recursively [f]
+  (org.apache.commons.io.FileUtils/deleteDirectory (java.io.File. f)))
+
+
 (defn delete-test-core
   [core]
   (delete-file-recursively (map-path test-solr-root core)))
+

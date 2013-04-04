@@ -17,7 +17,7 @@
 (deftest test-create
   (let [solr-server (solr-server test-http-conf)]
     (testing "Create a new core."
-      (let [r  (create solr-server "magazines" "magazines"
+      (let [r (create solr-server "magazines" "magazines"
 		       (map-path "test-solr/conf/solrconfig.xml")
 		       (map-path "test-solr/conf/schema.xml"))]
 	(is (= "magazines" (:core r))))))
@@ -26,7 +26,7 @@
 (deftest test-reload
   (let [solr-server (solr-server test-http-conf)]
     (testing "Reload a core."
-      (let [r  (create solr-server "newspapers" "newspapers"
+      (let [r (create solr-server "newspapers" "newspapers"
 		       (map-path "test-solr/conf/solrconfig.xml")
 		       (map-path "test-solr/conf/schema.xml"))
 	    r (reload solr-server "newspapers")]

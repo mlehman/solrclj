@@ -1,6 +1,5 @@
 (ns solrclj.servers
-  ^{:doc "A clojure library for Apache Solr."
-      :author "Matt Lehman"}
+  ^{:doc "A clojure library for Apache Solr." :author "Matt Lehman"}
   (:import [java.io File]
            [org.apache.solr.client.solrj.impl CommonsHttpSolrServer]))
 

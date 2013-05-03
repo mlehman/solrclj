@@ -4,3 +4,9 @@ lib
 classes
 test-solr/*/data
 *~
+target
+.lein-deps-sum
+.lein-failures
+.lein-plugins
+.lein-repl-history
+
